@@ -15,7 +15,7 @@ public enum MessageConst {
     E_NOEMP_CODE(""),
     E_EMP_CODE_EXIST(""),
     E_NOTITLE(""),
-    E_NOCONTEMT(""),
+    E_NOCONTEMT("");
 
     private final String text;
 

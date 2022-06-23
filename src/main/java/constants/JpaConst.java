@@ -36,7 +36,7 @@ public interface JpaConst {
     String ENTITY_EMP = "employee";
     String ENTITY_REP = "report";
 
-    String JPQL_PRAM_CODE = "code";
+    String JPQL_PARM_CODE = "code";
     String JPQL_PARM_PASSWORD = "password";
     String JPQL_PARM_EMPLOYEE = "employee";
 

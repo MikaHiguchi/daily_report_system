@@ -36,7 +36,7 @@ public enum AttributeConst {
    REP_ID("id"),
    REP_DATE("report_date"),
    REP_TITLE("title"),
-   REP_CONTENT("content"),
+   REP_CONTENT("content");
 
    private final String text;
    private final Integer i;
@@ -44,10 +44,12 @@ public enum AttributeConst {
    private AttributeConst(final String text) {
        this.text = text;
        this.i = null;
+   }
 
    private AttributeConst(final Integer i) {
        this.text = null;
        this.i = i;
+   }
 
    public String getValue() {
        return this.text;
