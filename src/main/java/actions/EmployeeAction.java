@@ -97,7 +97,21 @@ public class EmployeeAction extends ActionBase {
                 //一覧画面にリダイレクト
                 redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
             }
+        }
+    }
+
+    public void show() throws ServletException, IOException {
+
+        EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+
+        if(ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+            return;
+        }
+        putRequestScope(AttributeConst.EMPLOYEE, ev);
+
+        forward(ForwardConst.FW_EMP_SHOW);
 
         }
     }
-}
+
