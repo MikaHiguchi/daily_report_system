@@ -9,17 +9,17 @@ import services.EmployeeService;
 
 public class EmployeeValidator {
 
-    public class List<String> validate(
-            EmployeeService service, EmployeeView ev,Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
+    public static List<String> validate(
+            EmployeeService service, EmployeeView ev, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
         List <String> errors = new ArrayList<String>();
 
         String codeError = validateCode(service, ev.getCode(), codeDuplicateCheckFlag);
-        if(!codeError.equals("")) {
+        if (!codeError.equals("")) {
             errors.add(codeError);
         }
 
         String nameError = validateName(ev.getName());
-        if(!nameError.equals("")) {
+        if (!nameError.equals("")) {
             errors.add(nameError);
         }
 
@@ -31,29 +31,28 @@ public class EmployeeValidator {
         return errors;
     }
 
-    public static String validateCode(EmployeeService service, java.lang.String code, Boolean codeDuplicateCheckFlag) {
+    private static String validateCode(EmployeeService service, String code, Boolean codeDuplicateCheckFlag) {
         if (code == null || code.equals("")) {
             return MessageConst.E_NOEMP_CODE.getMessage();
         }
 
         if (codeDuplicateCheckFlag) {
 
-            long EmployeeConst = isDuplicateEmployee(service, code);
+            long employeeCount = isDuplicateEmployee(service, code);
 
-            if (employeeConst > 0) {
-                returnMessageConst.E_EMP_CODE_EXIST.getMessage();
+            if (employeeCount > 0) {
+                return MessageConst.E_EMP_CODE_EXIST.getMessage();
             }
         }
 
         return "";
     }
 
-    }
 
 private static long isDuplicateEmployee(EmployeeService service, String code) {
 
-    long EmployeeConst = service.constByCode(code);
-    return employeeConst;
+    long employeesCount = service.countByCode(code);
+    return employeesCount;
 }
 
 private static String validateName(String name) {
@@ -65,11 +64,12 @@ private static String validateName(String name) {
     return "";
 }
 
-private Static String validatePassword(String password, Boolean passwordCheckFlag) {
+private static String validatePassword(String password, Boolean passwordCheckFlag) {
 
     if (passwordCheckFlag && (password == null || password.equals(""))) {
         return MessageConst.E_NOPASSWORD.getMessage();
     }
+
     return "";
 }
 

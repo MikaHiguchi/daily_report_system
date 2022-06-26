@@ -12,10 +12,11 @@ import models.Employee;
 import models.validators.EmployeeValidator;
 import utils.EncryptUtil;
 
-public class EmployeeService {
+public class EmployeeService extends ServiceBase {
+
     public List<EmployeeView> getPerPage(int page) {
-        List<Employee> employee = em.createNameQuery(JpaConst.Q_EMP_GET_ALL, Employee.class)
-                .setFirstResult(JpaConst.ROW_PER_PAGE) * (page - 1))
+        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_ALL, Employee.class)
+                .setFirstResult(JpaConst.ROW_PER_PAGE * (page - 1))
                 .setMaxResults(JpaConst.ROW_PER_PAGE)
                 .getResultList();
 
@@ -44,15 +45,16 @@ public class EmployeeService {
 
         return EmployeeConverter.toView(e);
         }
-    }
 
-public EmployeeView FindOne(int id) {
+
+public EmployeeView findOne(int id) {
     Employee e = findOneInternal(id);
     return EmployeeConverter.toView(e);
 }
+
 public long countByCode(String code) {
 
-    long employee_count = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_RESISTERED_BY_CODE, Long.class)
+    long employees_count = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_REGISTERED_BY_CODE, Long.class)
             .setParameter(JpaConst.JPQL_PARM_CODE, code)
             .getSingleResult();
     return employees_count;
@@ -64,7 +66,7 @@ public List<String> create(EmployeeView ev, String pepper) {
     ev.setPassword(pass);
 
     LocalDateTime now = LocalDateTime.now();
-    ev.setCreaterAt(now);
+    ev.setCreatedAt(now);
     ev.setUpdatedAt(now);
 
     List<String> errors = EmployeeValidator.validate(this, ev, true, true);
@@ -78,7 +80,7 @@ public List<String> create(EmployeeView ev, String pepper) {
 
 public List<String> update(EmployeeView ev, String pepper) {
 
-    EmployeeView saveEmp = findOne(ev.getId());
+    EmployeeView savedEmp = findOne(ev.getId());
 
     boolean validateCode = false;
     if(!savedEmp.getCode().equals(ev.getCode())); {
@@ -89,7 +91,7 @@ public List<String> update(EmployeeView ev, String pepper) {
     }
 
     boolean validatePass = false;
-    if(ev.getPassword() != null && !ev.getPassword().(equals("")) {
+    if (ev.getPassword() != null && !ev.getPassword().equals("")) {
 
         validatePass = true;
 
@@ -103,7 +105,7 @@ public List<String> update(EmployeeView ev, String pepper) {
     LocalDateTime today = LocalDateTime.now();
     savedEmp.setUpdatedAt(today);
 
-    List<String> errors = EmployeeValidator.validate(this, saveEmp, validateCode, validatePass);
+    List<String> errors = EmployeeValidator.validate(this, savedEmp, validateCode, validatePass);
 
     if (errors.size() == 0) {
         update(savedEmp);
@@ -120,7 +122,7 @@ public void destroy(Integer id) {
 
     savedEmp.setDeleteFlag(JpaConst.EMP_DEL_TRUE);
 
-    update(saveEmp);
+    update(savedEmp);
 
 }
 
@@ -140,4 +142,28 @@ public Boolean validateLogin(String code, String plainPass, String pepper) {
 
 }
 
+private Employee findOneInternal(int id) {
+    Employee e = em.find(Employee.class, id);
+
+    return e;
 }
+
+private void create(EmployeeView ev) {
+
+    em.getTransaction().begin();
+    em.persist(EmployeeConverter.toModel(ev));
+    em.getTransaction().commit();
+
+}
+
+private void update(EmployeeView ev) {
+
+    em.getTransaction().begin();
+    Employee e = findOneInternal(ev.getId());
+    EmployeeConverter.copyViewToModel(e, ev);
+    em.getTransaction().commit();
+
+}
+
+}
+

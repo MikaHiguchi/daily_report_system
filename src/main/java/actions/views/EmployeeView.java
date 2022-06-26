@@ -28,6 +28,6 @@ public class EmployeeView {
 
     private LocalDateTime updatedAt;
 
-    private Integer deletedFlag;
+    private Integer deleteFlag;
 
 }
