@@ -6,7 +6,7 @@ public enum MessageConst {
     E_LOGINED("ログインに失敗しました"),
     I_LOGOUT("ログアウトしました"),
 
-    I_RESISTERED("登録が完了しました。"),
+    I_REGISTERED("登録が完了しました。"),
     I_UPDATED("更新が完了しました。"),
     I_DELETED("削除が完了しました。"),
 
