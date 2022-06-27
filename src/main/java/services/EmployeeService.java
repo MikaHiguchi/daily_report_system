@@ -129,7 +129,7 @@ public void destroy(Integer id) {
 public Boolean validateLogin(String code, String plainPass, String pepper) {
 
     boolean isValidEmployee = false;
-    if (code != null && code.equals("") && plainPass != null && !plainPass.equals("")) {
+    if (code != null && !code.equals("") && plainPass != null && !plainPass.equals("")) {
         EmployeeView ev = findOne(code, plainPass, pepper);
 
         if(ev != null && ev.getId() != null) {

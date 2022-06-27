@@ -24,6 +24,7 @@ public class EmployeeValidator {
         }
 
         String passError = validatePassword(ev.getPassword(), passwordCheckFlag);
+
         if(!passError.equals("")) {
             errors.add(passError);
         }
