@@ -28,6 +28,7 @@ public class EmployeeAction extends ActionBase {
     }
 
     public void index() throws ServletException, IOException {
+        if (checkAdmin()) {
 
         int page = getPage();
         List<EmployeeView> employees = service.getPerPage(page);
@@ -44,24 +45,23 @@ public class EmployeeAction extends ActionBase {
             putRequestScope(AttributeConst.FLUSH, flush);
             removeSessionScope(AttributeConst.FLUSH);
         }
-
+    }
         forward(ForwardConst.FW_EMP_INDEX);
 
     }
     public void entryNew() throws ServletException, IOException {
+        if (checkAdmin()) {
 
         putRequestScope(AttributeConst.TOKEN, getTokenId());
         putRequestScope(AttributeConst.EMPLOYEE, new EmployeeView());
 
         forward(ForwardConst.FW_EMP_NEW);
     }
-
+}
     public void create() throws ServletException, IOException {
 
-        //CSRF対策 tokenのチェック
-        if (checkToken()) {
+        if (checkAdmin() && checkToken()) {
 
-            //パラメータの値を元に従業員情報のインスタンスを作成する
             EmployeeView ev = new EmployeeView(
                     null,
                     getRequestParam(AttributeConst.EMP_CODE),
@@ -72,20 +72,16 @@ public class EmployeeAction extends ActionBase {
                     null,
                     AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
 
-            //アプリケーションスコープからpepper文字列を取得
             String pepper = getContextScope(PropertyConst.PEPPER);
 
-            //従業員情報登録
             List<String> errors = service.create(ev, pepper);
 
             if (errors.size() > 0) {
-                //登録中にエラーがあった場合
 
-                putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-                putRequestScope(AttributeConst.EMPLOYEE, ev); //入力された従業員情報
-                putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
+                putRequestScope(AttributeConst.TOKEN, getTokenId());
+                putRequestScope(AttributeConst.EMPLOYEE, ev);
+                putRequestScope(AttributeConst.ERR, errors);
 
-                //新規登録画面を再表示
                 forward(ForwardConst.FW_EMP_NEW);
 
             } else {
@@ -102,6 +98,8 @@ public class EmployeeAction extends ActionBase {
 
     public void show() throws ServletException, IOException {
 
+        if (checkAdmin()) {
+
         EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
         if(ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
@@ -113,7 +111,11 @@ public class EmployeeAction extends ActionBase {
         forward(ForwardConst.FW_EMP_SHOW);
 
         }
+    }
     public void edit() throws ServletException, IOException {
+
+        if (checkAdmin()) {
+
         EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
         if(ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
@@ -127,9 +129,9 @@ public class EmployeeAction extends ActionBase {
 
         forward(ForwardConst.FW_EMP_EDIT);
     }
-
+    }
     public void update() throws ServletException, IOException {
-        if (checkToken()) {
+        if (checkAdmin() && checkToken()) {
             EmployeeView ev = new EmployeeView(
                     toNumber(getRequestParam(AttributeConst.EMP_ID)),
                     getRequestParam(AttributeConst.EMP_CODE),
@@ -157,11 +159,11 @@ public class EmployeeAction extends ActionBase {
 
             redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
         }
-        }
-        }
+    }
+}
         public void destroy() throws ServletException, IOException {
 
-            if (checkToken()) {
+            if (checkAdmin() && checkToken()) {
                 service.destroy(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
                 putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED.getMessage());
@@ -169,6 +171,21 @@ public class EmployeeAction extends ActionBase {
                 redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
 
             }
+        }
+        private boolean checkAdmin() throws ServletException, IOException {
+
+            EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+
+            if (ev.getAdminFlag() != AttributeConst.ROLE_ADMIN.getIntegerValue()) {
+
+                forward(ForwardConst.FW_ERR_UNKNOWN);
+                return false;
+
+            } else {
+
+                return true;
+            }
+
         }
 
 }
