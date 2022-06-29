@@ -12,8 +12,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-
 public class ReportView {
 
     private Integer id;

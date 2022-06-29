@@ -25,7 +25,7 @@ import lombok.Setter;
 @NamedQueries({
     @NamedQuery(
             name = JpaConst.Q_REP_GET_ALL,
-            query = JpaConst.Q_EMP_GET_ALL_DEF),
+            query = JpaConst.Q_REP_GET_ALL_DEF),
     @NamedQuery(
             name = JpaConst.Q_REP_COUNT,
             query = JpaConst.Q_REP_COUNT_DEF),
@@ -34,7 +34,7 @@ import lombok.Setter;
             query = JpaConst.Q_REP_GET_ALL_MINE_DEF),
     @NamedQuery(
             name = JpaConst.Q_REP_COUNT_ALL_MINE,
-            query = JpaConst.Q_REP_COUNT_ALL_MINE_DEF),
+            query = JpaConst.Q_REP_COUNT_ALL_MINE_DEF)
 })
 
 @Getter
@@ -42,7 +42,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
 public class Report {
     @Id
     @Column(name = JpaConst.REP_COL_ID)
@@ -56,15 +55,15 @@ public class Report {
     @Column(name = JpaConst.REP_COL_REP_DATE, nullable = false)
     private LocalDate reportDate;
 
-    @Column(name = JpaConst.REP_COL_TITLE, length = 225, nullable = false)
+    @Column(name = JpaConst.REP_COL_TITLE, length = 255, nullable = false)
     private String title;
 
     @Lob
     @Column(name = JpaConst.REP_COL_CONTENT, nullable = false)
     private String content;
 
-   @Column(name = JpaConst.REP_COL_CREATED_AT, nullable = false)
-   private LocalDateTime createdAt;
+    @Column(name = JpaConst.REP_COL_CREATED_AT, nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(name = JpaConst.REP_COL_UPDATED_AT, nullable = false)
     private LocalDateTime updatedAt;

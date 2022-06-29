@@ -6,11 +6,7 @@ import java.util.List;
 import models.Report;
 
 public class ReportConverter {
-    /**
-     * ViewモデルのインスタンスからDTOモデルのインスタンスを作成する
-     * @param rv ReportViewのインスタンス
-     * @return Reportのインスタンス
-     */
+
     public static Report toModel(ReportView rv) {
         return new Report(
                 rv.getId(),
@@ -22,7 +18,7 @@ public class ReportConverter {
                 rv.getUpdatedAt());
     }
 
-        public static ReportView toView(Report r) {
+    public static ReportView toView(Report r) {
 
         if(r == null) {
             return null;
@@ -36,15 +32,16 @@ public class ReportConverter {
                 r.getContent(),
                 r.getCreatedAt(),
                 r.getUpdatedAt());
-
     }
 
-        public static List<ReportView> toViewList(List<Report> list) {
-            List<ReportView> evs = new ArrayList<>();
+
+    public static List<ReportView> toViewList(List<Report> list) {
+        List<ReportView> evs = new ArrayList<>();
 
             for (Report r : list) {
                 evs.add(toView(r));
-        }
+            }
+
             return evs;
         }
 
@@ -55,7 +52,7 @@ public class ReportConverter {
         r.setTitle(rv.getTitle());
         r.setContent(rv.getContent());
         r.setCreatedAt(rv.getCreatedAt());
-        r.setUpdatedAt(r.getUpdatedAt());
+        r.setUpdatedAt(rv.getUpdatedAt());
 
     }
 

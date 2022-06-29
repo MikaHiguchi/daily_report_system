@@ -13,7 +13,7 @@ import models.validators.ReportValidator;
 
 public class ReportService extends ServiceBase {
 
-    public List<ReportView> retMinePerPage(EmployeeView employee, int page) {
+    public List<ReportView> getMinePerPage(EmployeeView employee, int page) {
 
         List<Report> reports = em.createNamedQuery(JpaConst.Q_REP_GET_ALL_MINE, Report.class)
                 .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(employee))
@@ -27,8 +27,8 @@ public class ReportService extends ServiceBase {
     public long countAllMine(EmployeeView employee) {
 
         long count = (long) em.createNamedQuery(JpaConst.Q_REP_COUNT_ALL_MINE, Long.class)
-                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel((employee))
-                        .getSingleResult();
+                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(employee))
+                .getSingleResult();
 
                 return count;
     }
@@ -44,7 +44,7 @@ public class ReportService extends ServiceBase {
     }
 
     public long countAll() {
-        long report_count = (long) em.createNamedQuery(JpaConst.Q_REP_COUNT, Long.class)
+        long reports_count = (long) em.createNamedQuery(JpaConst.Q_REP_COUNT, Long.class)
                 .getSingleResult();
         return reports_count;
     }

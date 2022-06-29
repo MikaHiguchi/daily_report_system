@@ -13,6 +13,7 @@ public class ReportValidator {
         String titleError = validateTitle(rv.getTitle());
         if (!titleError.equals("")) {
             errors.add(titleError);
+    }
 
         String contentError = validateContent(rv.getContent());
         if (!contentError.equals("")) {
