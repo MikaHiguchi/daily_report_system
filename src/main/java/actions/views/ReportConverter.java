@@ -18,9 +18,10 @@ public class ReportConverter {
                 rv.getUpdatedAt());
     }
 
+
     public static ReportView toView(Report r) {
 
-        if(r == null) {
+        if (r == null) {
             return null;
         }
 
@@ -38,12 +39,12 @@ public class ReportConverter {
     public static List<ReportView> toViewList(List<Report> list) {
         List<ReportView> evs = new ArrayList<>();
 
-            for (Report r : list) {
-                evs.add(toView(r));
-            }
-
-            return evs;
+        for (Report r : list) {
+            evs.add(toView(r));
         }
+
+        return evs;
+    }
 
     public static void copyViewToModel(Report r, ReportView rv) {
         r.setId(rv.getId());
